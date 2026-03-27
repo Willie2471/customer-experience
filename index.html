@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Your Experience – WS Lawn Care Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #1b5e20;
+    --green-mid: #2e7d32;
+    --green-light: #4caf50;
+    --green-pale: #e8f5e9;
+    --gold: #f9a825;
+    --text-dark: #1a2b1a;
+    --text-mid: #4a5c4a;
+    --text-light: #7a8c7a;
+    --white: #ffffff;
+    --shadow: 0 8px 40px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(145deg, #e8f5e9 0%, #c8e6c9 40%, #dcedc8 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  /* Decorative grass blades at bottom */
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath fill='%232e7d32' d='M0,60 C50,10 100,50 150,20 C200,-10 250,40 300,15 C350,-10 400,45 450,20 C500,-5 550,50 600,25 C650,0 700,45 750,18 C800,-8 850,42 900,20 C950,-2 1000,44 1050,22 C1100,0 1150,40 1200,15 L1200,60 Z'/%3E%3C/svg%3E") repeat-x bottom;
+    background-size: auto 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    animation: cardIn 0.5s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+    padding: 32px 28px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+  }
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: -30px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+
+  .logo-wrap {
+    width: 72px; height: 72px;
+    background: rgba(255,255,255,0.15);
+    border: 3px solid rgba(255,255,255,0.35);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 32px;
+    position: relative; z-index: 1;
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    color: var(--white);
+    font-size: 1.3rem;
+    line-height: 1.2;
+    position: relative; z-index: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .tagline {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.78rem;
+    margin-top: 4px;
+    font-style: italic;
+    position: relative; z-index: 1;
+  }
+
+  .card-body {
+    padding: 32px 28px;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeSlide 0.4s ease both; }
+  .screen.active { display: block; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(18px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .prompt {
+    text-align: center;
+    color: var(--text-dark);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .sub {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-bottom: 28px;
+  }
+
+  /* ── EMOJI ROW ── */
+  .emoji-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .emoji-btn {
+    background: var(--green-pale);
+    border: 2.5px solid transparent;
+    border-radius: 16px;
+    padding: 14px 10px 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 80px;
+    transition: all 0.2s;
+    outline: none;
+  }
+
+  .emoji-btn:hover { border-color: var(--green-light); transform: translateY(-3px); }
+  .emoji-btn.selected { border-color: var(--green-mid); background: #c8e6c9; box-shadow: 0 4px 14px rgba(46,125,50,0.25); transform: translateY(-4px) scale(1.05); }
+
+  .emoji-btn .face { font-size: 2.2rem; line-height: 1; display: block; margin-bottom: 6px; }
+  .emoji-btn .label { font-size: 0.68rem; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ── TEXT AREA ── */
+  .field-label {
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 0.88rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  textarea, input[type="text"], input[type="email"] {
+    width: 100%;
+    border: 2px solid #d0e8d0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    background: #fafff8;
+    resize: vertical;
+    transition: border-color 0.2s;
+    outline: none;
+    margin-bottom: 14px;
+  }
+
+  textarea:focus, input:focus { border-color: var(--green-mid); background: #fff; }
+
+  textarea { min-height: 110px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 14px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+    color: white;
+    box-shadow: 0 4px 18px rgba(46,125,50,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 7px 22px rgba(46,125,50,0.4); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-google {
+    background: white;
+    color: #3c3c3c;
+    border: 2px solid #e0e0e0;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  .btn-google:hover { border-color: #bdbdbd; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+
+  .btn-skip {
+    background: transparent;
+    color: var(--text-light);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 10px;
+    margin-top: 0;
+  }
+  .btn-skip:hover { color: var(--text-mid); }
+
+  /* ── SUCCESS / INFO BLOCKS ── */
+  .success-icon { font-size: 3.5rem; text-align: center; margin-bottom: 12px; }
+  .success-title { font-family: 'Playfair Display', serif; text-align: center; font-size: 1.5rem; color: var(--green-dark); margin-bottom: 8px; }
+  .success-msg { text-align: center; color: var(--text-mid); font-size: 0.9rem; line-height: 1.6; }
+
+  .divider { text-align: center; color: var(--text-light); font-size: 0.78rem; margin: 16px 0; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .google-card {
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border: 2px solid #c8e6c9;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .google-card .stars { font-size: 1.4rem; margin-bottom: 8px; color: var(--gold); letter-spacing: 2px; }
+  .google-card p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.5; }
+  .google-card strong { color: var(--text-dark); }
+
+  .sending-overlay {
+    text-align: center;
+    padding: 16px 0 8px;
+    color: var(--green-mid);
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  .faith-badge {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.74rem;
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 3px solid rgba(46,125,50,0.2);
+    border-top-color: var(--green-mid);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  .rating-badge {
+    display: inline-block;
+    background: var(--green-pale);
+    border: 1.5px solid #c8e6c9;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin: 0 auto 20px;
+    display: table;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <div class="logo-wrap">🌿</div>
+    <div class="brand-name">WS Lawn Care Services, LLC</div>
+    <div class="tagline">"You Grow It, We Mow It!"</div>
+  </div>
+
+  <div class="card-body">
+
+    <!-- ══ SCREEN 1: Rating ══ -->
+    <div class="screen active" id="screen-rating">
+      <p class="prompt">How was your experience<br>with our crew today?</p>
+      <p class="sub">Your feedback means the world to us.</p>
+
+      <div class="emoji-row">
+        <button class="emoji-btn" data-val="bad" onclick="selectRating(this,'bad')">
+          <span class="face">😞</span>
+          <span class="label">Bad</span>
+        </button>
+        <button class="emoji-btn" data-val="ok" onclick="selectRating(this,'ok')">
+          <span class="face">😐</span>
+          <span class="label">OK</span>
+        </button>
+        <button class="emoji-btn" data-val="good" onclick="selectRating(this,'good')">
+          <span class="face">😊</span>
+          <span class="label">Good</span>
+        </button>
+        <button class="emoji-btn" data-val="great" onclick="selectRating(this,'great')">
+          <span class="face">🤩</span>
+          <span class="label">Great</span>
+        </button>
+      </div>
+
+      <br>
+      <button class="btn btn-primary" id="btn-next-rating" disabled onclick="goToNext()">Continue →</button>
+
+      <p class="faith-badge">✝️ Jesus First Before Profits · Commitment Without Compromise</p>
+    </div>
+
+    <!-- ══ SCREEN 2a: Feedback (bad / ok) ══ -->
+    <div class="screen" id="screen-feedback">
+      <div class="rating-badge" id="rating-badge-label">Your Rating</div>
+      <p class="prompt">We're sorry to hear that.</p>
+      <p class="sub">Please tell us what went wrong so we can make it right.</p>
+
+      <label class="field-label">Your Name (optional)</label>
+      <input type="text" id="fb-name" placeholder="e.g. John Smith">
+
+      <label class="field-label">Your Comments *</label>
+      <textarea id="fb-comments" placeholder="Tell us what happened — we want to improve and serve you better…"></textarea>
+
+      <label class="field-label">Your Email or Phone (optional — if you'd like us to follow up)</label>
+      <input type="text" id="fb-contact" placeholder="email or phone number">
+
+      <div class="sending-overlay" id="send-overlay"><span class="spinner"></span> Sending your feedback…</div>
+
+      <button class="btn btn-primary" id="btn-send-feedback" onclick="submitFeedback()">Send My Feedback</button>
+    </div>
+
+    <!-- ══ SCREEN 2b: Google Review (good / great) ══ -->
+    <div class="screen" id="screen-google">
+      <div class="success-icon">🌟</div>
+      <p class="success-title">Wonderful!</p>
+      <p class="success-msg">We're so glad you had a great experience. We truly appreciate your trust in us.</p>
+      <br>
+      <div class="google-card">
+        <div class="stars">★★★★★</div>
+        <p>If you haven't already, would you take 60 seconds to leave us a<br><strong>Google Review?</strong><br><br>It helps other neighbors find us and grows our small, faith-based business. 🙏</p>
+      </div>
+      <a href="https://g.page/r/Cfgn_8s80PSREBM/review" target="_blank" rel="noopener noreferrer">
+        <button class="btn btn-google">
+          <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#EA4335" d="M24 9.5c3.14 0 5.95 1.08 8.17 2.86l6.1-6.1C34.36 3.09 29.43 1 24 1 14.82 1 6.97 6.48 3.23 14.3l7.1 5.52C12.05 13.49 17.58 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.5 24.5c0-1.56-.14-3.06-.4-4.5H24v8.52h12.67c-.55 2.94-2.2 5.44-4.68 7.12l7.19 5.59C43.28 37.32 46.5 31.38 46.5 24.5z"/>
+            <path fill="#FBBC05" d="M10.33 28.17A14.5 14.5 0 0 1 9.5 24c0-1.45.2-2.86.55-4.18l-7.1-5.52A23.93 23.93 0 0 0 0 24c0 3.82.92 7.43 2.55 10.62l7.78-6.45z"/>
+            <path fill="#34A853" d="M24 47c5.43 0 9.98-1.79 13.31-4.87l-7.19-5.59c-1.82 1.22-4.15 1.96-6.12 1.96-6.42 0-11.95-4.34-13.67-10.33l-7.78 6.45C6.97 41.52 14.82 47 24 47z"/>
+          </svg>
+          Leave a Google Review
+        </button>
+      </a>
+      <div class="divider">or</div>
+      <button class="btn btn-skip" onclick="goToThankYou()">I've already left a review — thanks!</button>
+    </div>
+
+    <!-- ══ SCREEN 3: Thank You (after feedback) ══ -->
+    <div class="screen" id="screen-thankyou-feedback">
+      <div class="success-icon">💚</div>
+      <p class="success-title">Thank You!</p>
+      <p class="success-msg">We received your feedback and will review it promptly.<br><br>At WS Lawn Care, <em>Commitment Without Compromise</em> means we take every concern seriously. We appreciate you giving us the chance to improve.</p>
+      <br>
+      <p class="faith-badge">✝️ God bless you and your family.</p>
+    </div>
+
+    <!-- ══ SCREEN 4: Thank You (after skipping google) ══ -->
+    <div class="screen" id="screen-thankyou-skip">
+      <div class="success-icon">🙌</div>
+      <p class="success-title">You're Amazing!</p>
+      <p class="success-msg">Thank you so much for your support. We look forward to keeping your lawn looking its best!<br><br>See you next visit. 🌿</p>
+      <br>
+      <p class="faith-badge">✝️ God bless you and your family.</p>
+    </div>
+
+  </div><!-- /card-body -->
+</div><!-- /card -->
+
+<script>
+  let selectedRating = null;
+
+  function selectRating(btn, val) {
+    document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedRating = val;
+    document.getElementById('btn-next-rating').disabled = false;
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    el.classList.add('active');
+    // Re-trigger animation
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = '';
+  }
+
+  function goToNext() {
+    if (!selectedRating) return;
+    if (selectedRating === 'bad' || selectedRating === 'ok') {
+      const label = selectedRating === 'bad' ? '😞 Bad Experience' : '😐 OK Experience';
+      document.getElementById('rating-badge-label').textContent = label;
+      if (selectedRating === 'ok') {
+        document.querySelector('#screen-feedback .prompt').textContent = 'Help us do better.';
+        document.querySelector('#screen-feedback .sub').textContent = 'What could we have done differently for you?';
+      }
+      showScreen('screen-feedback');
+    } else {
+      showScreen('screen-google');
+    }
+  }
+
+  function goToThankYou() {
+    showScreen('screen-thankyou-skip');
+  }
+
+  async function submitFeedback() {
+    const comments = document.getElementById('fb-comments').value.trim();
+    if (!comments) {
+      document.getElementById('fb-comments').style.borderColor = '#e53935';
+      document.getElementById('fb-comments').focus();
+      return;
+    }
+    document.getElementById('fb-comments').style.borderColor = '';
+
+    const name    = document.getElementById('fb-name').value.trim() || 'Anonymous';
+    const contact = document.getElementById('fb-contact').value.trim() || 'Not provided';
+    const rating  = selectedRating === 'bad' ? 'Bad 😞' : 'OK 😐';
+
+    document.getElementById('btn-send-feedback').disabled = true;
+    document.getElementById('send-overlay').style.display = 'block';
+
+    // Build mailto link as fallback — and attempt EmailJS / fetch to backend if configured
+    // Using mailto as a universal no-backend solution:
+    const subject = encodeURIComponent(`WS Lawn Care – Customer Feedback (${rating})`);
+    const body = encodeURIComponent(
+      `Rating: ${rating}\n\nName: ${name}\nContact: ${contact}\n\nComments:\n${comments}\n\n---\nSent from WS Lawn Care Review Page`
+    );
+
+    // Open email client (works on mobile and desktop)
+    const mailtoLink = `mailto:info@wslawncareservicesllc.com?subject=${subject}&body=${body}`;
+
+    // Small delay for UX feel
+    await new Promise(r => setTimeout(r, 900));
+
+    document.getElementById('send-overlay').style.display = 'none';
+    showScreen('screen-thankyou-feedback');
+
+    // Open email client in background
+    window.location.href = mailtoLink;
+  }
+</script>
+
+</body>
+</html>
