@@ -439,8 +439,8 @@
       <p class="prompt" id="fb-prompt">We're sorry to hear that.</p>
       <p class="sub">Tell us what happened so we can make it right.</p>
 
-      <label class="field-label" for="fb-name">Your Name (optional)</label>
-      <input type="text" id="fb-name" placeholder="e.g. John Smith">
+      <label class="field-label" for="fb-name">Your Name <span style="color:#c62828;">*</span></label>
+      <input type="text" id="fb-name" placeholder="e.g. John Smith" required>
 
       <label class="field-label" for="fb-comments">Your Comments *</label>
       <textarea id="fb-comments" placeholder="Tell us what happened — we want to improve…"></textarea>
@@ -583,7 +583,13 @@
       return;
     }
 
-    const name    = document.getElementById('fb-name').value.trim()    || 'Anonymous';
+    const name    = document.getElementById('fb-name').value.trim();
+    if (!name) {
+      document.getElementById('fb-name').focus();
+      document.getElementById('fb-name').style.border = '2px solid #c62828';
+      return;
+    }
+    document.getElementById('fb-name').style.border = '';
     const contact = document.getElementById('fb-contact').value.trim() || 'Not provided';
     const rating  = selectedRating === 'bad' ? '😞 Bad' : '😐 OK';
     const now     = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
