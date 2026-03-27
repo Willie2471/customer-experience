@@ -25,11 +25,7 @@
 
   body {
     font-family: 'Lato', sans-serif;
-    background: #1a2e1a;
-    background-image:
-      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(46,125,50,0.35) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(27,94,32,0.4) 0%, transparent 55%),
-      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background: #ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -395,16 +391,16 @@
   /* ── FOOTER ── */
   .page-footer {
     width: 100%;
-    max-width: 480px;
     margin-top: 24px;
-    padding-bottom: 32px;
+    padding-bottom: 0;
     text-align: center;
+    line-height: 0;
   }
   .page-footer img {
-    max-width: 300px;
-    width: 80%;
-    opacity: 0.9;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    opacity: 1;
   }
 </style>
 </head>
@@ -537,7 +533,8 @@
        onerror="this.style.display='none'">
 </div>
 
-</div><!-- /page-wrapper -->
+</div><!-- /card --> 
+</div><!-- /card-body --> 
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // ── Embed logo as base64 ──
@@ -649,4 +646,11 @@
   function fallbackMailto(name, rating, comments, contact) {
     const subject = encodeURIComponent(`WS Lawn Care – Customer Feedback (${rating})`);
     const body = encodeURIComponent(
-      `Rating: ${rating}\n\nN
+      `Rating: ${rating}\n\nName: ${name || 'Not provided'}\nComments: ${comments || 'None'}\nContact: ${contact || 'Not provided'}`
+    );
+    window.location.href = `mailto:info@wslawncareservicesllc.com?subject=${subject}&body=${body}`;
+  }
+
+</script>
+</body>
+</html>
